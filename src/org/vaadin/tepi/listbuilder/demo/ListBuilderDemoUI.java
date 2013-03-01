@@ -6,6 +6,8 @@ import org.vaadin.tepi.listbuilder.ListBuilder;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.data.Container;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
@@ -55,31 +57,19 @@ public class ListBuilderDemoUI extends UI {
 
         content.addComponent(listBuilder);
 
+        listBuilder.addValueChangeListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                showValueNotification(event.getProperty().getValue());
+            }
+        });
+
         Button b = new Button("Show selected");
         b.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Object ordered = listBuilder.getValue();
-                StringBuilder selection = new StringBuilder();
-                if (ordered instanceof Collection) {
-                    @SuppressWarnings("rawtypes")
-                    Collection c = (Collection) ordered;
-                    for (Object itemId : c) {
-                        selection.append(itemId.toString());
-                        selection.append(", ");
-                    }
-                    if (selection.length() > 5) {
-                        String note = selection.substring(0,
-                                selection.length() - 2);
-                        new Notification("Selected items", note,
-                                Notification.Type.TRAY_NOTIFICATION).show(Page
-                                .getCurrent());
-                    } else {
-                        new Notification("Nothing selected",
-                                Notification.Type.TRAY_NOTIFICATION).show(Page
-                                .getCurrent());
-                    }
-                }
+                showValueNotification(listBuilder.getValue());
             }
         });
         content.addComponent(b);
@@ -96,6 +86,28 @@ public class ListBuilderDemoUI extends UI {
             id.addItem(fb);
         }
         return id;
+    }
+
+    private void showValueNotification(Object ordered) {
+        StringBuilder selection = new StringBuilder();
+        if (ordered instanceof Collection) {
+            @SuppressWarnings("rawtypes")
+            Collection c = (Collection) ordered;
+            for (Object itemId : c) {
+                selection.append(itemId.toString());
+                selection.append(", ");
+            }
+            if (selection.length() > 5) {
+                String note = selection.substring(0, selection.length() - 2);
+                new Notification("Selected items", note,
+                        Notification.Type.TRAY_NOTIFICATION).show(Page
+                        .getCurrent());
+            } else {
+                new Notification("Nothing selected",
+                        Notification.Type.TRAY_NOTIFICATION).show(Page
+                        .getCurrent());
+            }
+        }
     }
 
     public class TestBean {

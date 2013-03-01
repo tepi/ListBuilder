@@ -16,6 +16,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.UI;
 
 /**
  * Multiselect component with two lists: left side for available items and right
@@ -240,29 +241,19 @@ public class ListBuilder extends AbstractSelect {
                 markAsDirty();
                 return;
             }
-
-            // Limits the deselection to the set of visible items
-            // (non-visible items can not be deselected)
-            final Collection<?> visible = getVisibleItemIds();
-            if (visible != null) {
-                @SuppressWarnings("unchecked")
-                List<Object> newsel = (List<Object>) getValue();
-                if (newsel == null) {
-                    newsel = new ArrayList<Object>();
-                } else {
-                    newsel = new ArrayList<Object>(newsel);
-                }
-                newsel.removeAll(visible);
-                newsel.addAll(s);
-                setValue(newsel, true);
-            }
-        }
-        /* Store ordered selections */
-        if (variables.containsKey("selected")) {
+            /* Store ordered selections */
             orderedValue.clear();
-            final String[] ka = (String[]) variables.get("selected");
             for (int i = 0; i < ka.length; i++) {
                 orderedValue.add(ka[i]);
+            }
+            /* Must set internal value to null first to enforce ordering */
+            setInternalValue(null);
+            /* Sets the actual value */
+            setValue(s, true);
+            /* Mark connector as clean again */
+            UI uI = getUI();
+            if (uI != null) {
+                uI.getConnectorTracker().markClean(this);
             }
         }
     }

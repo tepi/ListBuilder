@@ -6,6 +6,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 
@@ -38,7 +39,7 @@ public class ListBuilderConnector extends AbstractComponentConnector implements
 
         getWidget().readonly = uidl.getBooleanAttribute("readonly");
         getWidget().disabled = uidl.getBooleanAttribute("disabled");
-        getWidget().immediate = uidl.getBooleanAttribute("immediate");
+        // getWidget().immediate = uidl.getBooleanAttribute("immediate");
 
         if (uidl.hasAttribute("cols")) {
             getWidget().cols = uidl.getIntAttribute("cols");
@@ -59,6 +60,12 @@ public class ListBuilderConnector extends AbstractComponentConnector implements
                 uidl.hasAttribute("tabindex") ? uidl
                         .getIntAttribute("tabindex") : 0);
         getWidget().fixButtonStates();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().immediate = getState().immediate;
     }
 
     @Override
