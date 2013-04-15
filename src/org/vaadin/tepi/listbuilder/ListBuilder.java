@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.vaadin.tepi.listbuilder.widgetset.client.ui.VListBuilder;
 
@@ -444,7 +445,22 @@ public class ListBuilder extends AbstractSelect {
      * @see com.vaadin.ui.AbstractField#getValue()
      */
     @Override
+    @SuppressWarnings("rawtypes")
     public Object getValue() {
+        Object value = super.getValue();
+        if (value instanceof Set) {
+            List<Object> result = new ArrayList<Object>();
+            for (Object o : (Set) value) {
+                result.add(o);
+            }
+            return result;
+        } else {
+            return value;
+        }
+    }
+
+    @Override
+    protected Object getInternalValue() {
         return orderedValue == null ? new ArrayList<Object>() : Collections
                 .unmodifiableList(getOrderedValue());
     }
