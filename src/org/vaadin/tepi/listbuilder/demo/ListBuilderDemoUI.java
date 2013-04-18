@@ -1,6 +1,7 @@
 package org.vaadin.tepi.listbuilder.demo;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.vaadin.tepi.listbuilder.ListBuilder;
 
@@ -70,12 +71,19 @@ public class ListBuilderDemoUI extends UI {
             @Override
             public void buttonClick(ClickEvent event) {
                 showValueNotification(listBuilder.getValue());
+                System.err.println("Valid: " + listBuilder.isValid());
             }
         });
         content.addComponent(b);
 
         vl.addComponent(content);
         vl.setComponentAlignment(content, Alignment.MIDDLE_CENTER);
+
+        listBuilder.setRequired(true);
+        listBuilder.setValue(Collections.singletonList(listBuilder.getItemIds()
+                .iterator().next()));
+
+        System.err.println("Valid: " + listBuilder.isValid());
     }
 
     private Container getBeanCont() {
