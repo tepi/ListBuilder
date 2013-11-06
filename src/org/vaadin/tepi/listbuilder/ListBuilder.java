@@ -393,7 +393,7 @@ public class ListBuilder extends AbstractSelect {
         }
     }
 
-    private ArrayList<Object> getOrderedValue() {
+    public ArrayList<Object> getOrderedValue() {
         ArrayList<Object> retVal = new ArrayList<Object>();
         for (String key : orderedValue) {
             retVal.add(itemIdMapper.get(key));
