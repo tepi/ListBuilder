@@ -1,6 +1,7 @@
 package org.tepi.listbuilder.demo;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.tepi.listbuilder.ListBuilder;
 
@@ -69,6 +70,12 @@ public class ListbuilderdemoApplication extends Application {
 
         vl.addComponent(content);
         vl.setComponentAlignment(content, Alignment.MIDDLE_CENTER);
+
+        listBuilder.setRequired(true);
+        listBuilder.setValue(Collections.singletonList(listBuilder.getItemIds()
+                .iterator().next()));
+
+        System.err.println("Valid: " + listBuilder.isValid());
     }
 
     private Container getBeanCont() {
