@@ -445,18 +445,9 @@ public class ListBuilder extends AbstractSelect {
      * @see com.vaadin.ui.AbstractField#getValue()
      */
     @Override
-    @SuppressWarnings("rawtypes")
     public Object getValue() {
-        Object value = super.getValue();
-        if (value instanceof Set) {
-            List<Object> result = new ArrayList<Object>();
-            for (Object o : (Set) value) {
-                result.add(o);
-            }
-            return result;
-        } else {
-            return value;
-        }
+        return orderedValue == null ? new ArrayList<Object>() : Collections
+                .unmodifiableList(getOrderedValue());
     }
 
     @Override

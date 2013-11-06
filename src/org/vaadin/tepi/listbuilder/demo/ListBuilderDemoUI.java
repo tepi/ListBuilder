@@ -27,126 +27,128 @@ import com.vaadin.ui.themes.Reindeer;
 @Title("ListBuilder Demo Application")
 public class ListBuilderDemoUI extends UI {
 
-    private ListBuilder listBuilder;
+	private ListBuilder listBuilder;
 
-    @Override
-    protected void init(VaadinRequest request) {
+	@Override
+	protected void init(VaadinRequest request) {
 
-        VerticalLayout vl = new VerticalLayout();
-        vl.addStyleName(Reindeer.LAYOUT_BLACK);
-        vl.setMargin(true);
-        vl.setSizeFull();
+		VerticalLayout vl = new VerticalLayout();
+		vl.addStyleName(Reindeer.LAYOUT_BLACK);
+		vl.setMargin(true);
+		vl.setSizeFull();
 
-        VerticalLayout content = new VerticalLayout();
-        content.setSpacing(true);
-        content.setSizeUndefined();
+		VerticalLayout content = new VerticalLayout();
+		content.setSpacing(true);
+		// content.setSizeUndefined();
+		content.setSizeFull();
 
-        setContent(vl);
+		setContent(vl);
 
-        listBuilder = new ListBuilder(
-                "ListBuilder component - preserves the item order");
+		listBuilder = new ListBuilder(
+				"ListBuilder component - preserves the item order");
 
-        listBuilder.setImmediate(true);
+		listBuilder.setImmediate(true);
 
-        listBuilder.setLeftColumnCaption("Select from here");
-        listBuilder.setRightColumnCaption("Selected items");
+		listBuilder.setLeftColumnCaption("Select from here");
+		listBuilder.setRightColumnCaption("Selected items");
 
-        listBuilder.setContainerDataSource(getBeanCont());
-        listBuilder.setItemCaptionPropertyId("name");
+		listBuilder.setContainerDataSource(getBeanCont());
+		listBuilder.setItemCaptionPropertyId("name");
 
-        listBuilder.setColumns(15);
+		// listBuilder.setColumns(15);
+		listBuilder.setSizeFull();
 
-        content.addComponent(listBuilder);
+		content.addComponent(listBuilder);
 
-        listBuilder.addValueChangeListener(new ValueChangeListener() {
+		listBuilder.addValueChangeListener(new ValueChangeListener() {
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                showValueNotification(event.getProperty().getValue());
-            }
-        });
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				showValueNotification(event.getProperty().getValue());
+			}
+		});
 
-        Button b = new Button("Show selected");
-        b.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                showValueNotification(listBuilder.getValue());
-                System.err.println("Valid: " + listBuilder.isValid());
-            }
-        });
-        content.addComponent(b);
+		Button b = new Button("Show selected");
+		b.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				showValueNotification(listBuilder.getValue());
+				System.err.println("Valid: " + listBuilder.isValid());
+			}
+		});
+		content.addComponent(b);
 
-        vl.addComponent(content);
-        vl.setComponentAlignment(content, Alignment.MIDDLE_CENTER);
+		vl.addComponent(content);
+		vl.setComponentAlignment(content, Alignment.MIDDLE_CENTER);
 
-        listBuilder.setRequired(true);
-        listBuilder.setValue(Collections.singletonList(listBuilder.getItemIds()
-                .iterator().next()));
+		listBuilder.setRequired(true);
+		listBuilder.setValue(Collections.singletonList(listBuilder.getItemIds()
+				.iterator().next()));
 
-        System.err.println("Valid: " + listBuilder.isValid());
-    }
+		System.err.println("Valid: " + listBuilder.isValid());
+	}
 
-    private Container getBeanCont() {
-        BeanItemContainer<TestBean> id = new BeanItemContainer<TestBean>(
-                TestBean.class);
-        for (int i = 0; i < 100; i++) {
-            TestBean fb = new TestBean(String.valueOf(i), "Item " + i);
-            id.addItem(fb);
-        }
-        return id;
-    }
+	private Container getBeanCont() {
+		BeanItemContainer<TestBean> id = new BeanItemContainer<TestBean>(
+				TestBean.class);
+		for (int i = 0; i < 100; i++) {
+			TestBean fb = new TestBean(String.valueOf(i), "Item " + i);
+			id.addItem(fb);
+		}
+		return id;
+	}
 
-    private void showValueNotification(Object ordered) {
-        StringBuilder selection = new StringBuilder();
-        if (ordered instanceof Collection) {
-            @SuppressWarnings("rawtypes")
-            Collection c = (Collection) ordered;
-            for (Object itemId : c) {
-                selection.append(itemId.toString());
-                selection.append(", ");
-            }
-            if (selection.length() > 5) {
-                String note = selection.substring(0, selection.length() - 2);
-                new Notification("Selected items", note,
-                        Notification.Type.TRAY_NOTIFICATION).show(Page
-                        .getCurrent());
-            } else {
-                new Notification("Nothing selected",
-                        Notification.Type.TRAY_NOTIFICATION).show(Page
-                        .getCurrent());
-            }
-        }
-    }
+	private void showValueNotification(Object ordered) {
+		StringBuilder selection = new StringBuilder();
+		if (ordered instanceof Collection) {
+			@SuppressWarnings("rawtypes")
+			Collection c = (Collection) ordered;
+			for (Object itemId : c) {
+				selection.append(itemId.toString());
+				selection.append(", ");
+			}
+			if (selection.length() > 5) {
+				String note = selection.substring(0, selection.length() - 2);
+				new Notification("Selected items", note,
+						Notification.Type.TRAY_NOTIFICATION).show(Page
+						.getCurrent());
+			} else {
+				new Notification("Nothing selected",
+						Notification.Type.TRAY_NOTIFICATION).show(Page
+						.getCurrent());
+			}
+		}
+	}
 
-    public class TestBean {
-        private String name;
-        private String id;
+	public class TestBean {
+		private String name;
+		private String id;
 
-        public TestBean(String id, String name) {
-            setId(id);
-            setName(name);
-        }
+		public TestBean(String id, String name) {
+			setId(id);
+			setName(name);
+		}
 
-        public String getName() {
-            return name;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public void setName(String name) {
+			this.name = name;
+		}
 
-        public String getId() {
-            return id;
-        }
+		public String getId() {
+			return id;
+		}
 
-        public void setId(String id) {
-            this.id = id;
-        }
+		public void setId(String id) {
+			this.id = id;
+		}
 
-        @Override
-        public String toString() {
-            return getName();
-        }
-    }
+		@Override
+		public String toString() {
+			return getName();
+		}
+	}
 
 }
