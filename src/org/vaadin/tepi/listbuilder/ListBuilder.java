@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.vaadin.tepi.listbuilder.widgetset.client.ui.VListBuilder;
 
@@ -446,8 +445,7 @@ public class ListBuilder extends AbstractSelect {
      */
     @Override
     public Object getValue() {
-        return orderedValue == null ? new ArrayList<Object>() : Collections
-                .unmodifiableList(getOrderedValue());
+        return getInternalValue();
     }
 
     @Override
@@ -543,9 +541,10 @@ public class ListBuilder extends AbstractSelect {
 
     @Override
     public void setMultiSelect(boolean multiSelect) {
-        throw new UnsupportedOperationException(
-                "ListBuilder is always in multiselect mode. "
-                        + "Use TwinColSelect if single-selection is required.");
+        if (!multiSelect)
+            throw new UnsupportedOperationException(
+                    "ListBuilder is always in multiselect mode. "
+                            + "Use TwinColSelect if single-selection is required.");
     }
 
     @Override

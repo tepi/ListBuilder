@@ -264,34 +264,6 @@ public class VListBuilder extends Composite implements Field, ClickHandler,
             selections.addItem(capts.get(key), key);
         }
 
-        int cols = -1;
-        if (getColumns() > 0) {
-            cols = getColumns();
-        } else if (!widthSet) {
-            cols = DEFAULT_COLUMN_COUNT;
-        }
-
-        if (cols >= 0) {
-            String colWidth = cols + "em";
-            String containerWidth = (2 * cols + 2 * buttonWidthEm + 0.5) + "em";
-            // Caption wrapper width == optionsSelect + buttons +
-            // selectionsSelect
-            String captionWrapperWidth = (2 * cols + buttonWidthEm) + "em";
-
-            options.setWidth(colWidth);
-            if (optionsCaption != null) {
-                optionsCaption.setWidth(Util.getRequiredWidth(options) + "px");
-            }
-            selections.setWidth(colWidth);
-            if (selectionsCaption != null) {
-                selectionsCaption.setWidth(Util.getRequiredWidth(selections)
-                        + "px");
-            }
-            buttons.setWidth(String.valueOf(buttonWidthEm) + "em");
-            moveButtons.setWidth(String.valueOf(buttonWidthEm) + "em");
-            container.setWidth(containerWidth);
-            captionWrapper.setWidth(captionWrapperWidth);
-        }
         if (getRows() > 0) {
             options.setVisibleItemCount(getRows());
             selections.setVisibleItemCount(getRows());
