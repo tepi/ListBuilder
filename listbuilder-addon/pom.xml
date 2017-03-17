@@ -6,7 +6,7 @@
 	<artifactId>listbuilder</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0.v8</version>
-	<name>MyComponent Add-on</name>
+	<name>ListBuilder</name>
 
 	<prerequisites>
 		<maven>3</maven>
