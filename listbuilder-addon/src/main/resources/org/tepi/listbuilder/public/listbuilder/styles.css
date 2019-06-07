@@ -1,3 +1,32 @@
+.v-listbuilder {
+    display: flex;
+    flex-direction: column;
+}
+.v-listbuilder .v-listbuilder-caption-wrapper {
+    width: 100%;
+    display: flex;
+}
+.v-listbuilder .v-listbuilder-caption-wrapper .v-listbuilder-caption-left,
+.v-listbuilder .v-listbuilder-caption-wrapper .v-listbuilder-caption-right {
+    flex-grow: 1;
+    padding-left: 5px;
+}
+
+.v-listbuilder .v-listbuilder-content-wrapper {
+	display: flex;
+}
+
+.v-listbuilder .v-listbuilder-content-wrapper .v-listbuilder-options,
+.v-listbuilder .v-listbuilder-content-wrapper .v-listbuilder-selections {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 30%;
+}
+
+.v-listbuilder .v-listbuilder-buttons {
+	margin-left: 5px;
+	margin-right: 5px;
+}
 .v-listbuilder .v-listbuilder-buttons .v-button:first-child .v-button-wrap:before {
 	font-family: FontAwesome;
 	content: "\f054";
@@ -8,17 +37,16 @@
 	content: "\f053";
 }
 
-.v-listbuilder .v-listbuilder-updown-buttons .v-button:first-child .v-button-wrap:before
+.v-listbuilder .v-listbuilder-buttons.v-listbuilder-updown-buttons {
+    margin-right: 0px;
+}
+.v-listbuilder .v-listbuilder-buttons.v-listbuilder-updown-buttons .v-button:first-child .v-button-wrap:before
 	{
 	font-family: FontAwesome;
 	content: "\f077";
 }
 
-.v-listbuilder .v-listbuilder-updown-buttons .v-button-wrap:before {
+.v-listbuilder .v-listbuilder-buttons.v-listbuilder-updown-buttons .v-button-wrap:before {
 	font-family: FontAwesome;
 	content: "\f078";
-}
-
-.v-listbuilder .v-listbuilder-caption-right {
-	text-align: right;	
 }

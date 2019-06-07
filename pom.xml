@@ -5,7 +5,7 @@
 	<groupId>org.tepi.listbuilder</groupId>
 	<artifactId>listbuilder-root</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0.v8</version>
+	<version>1.0.0-v8-compatibility</version>
 	<name>ListBuilder Add-on Root Project</name>
 
 	<prerequisites>

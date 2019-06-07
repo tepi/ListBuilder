@@ -1,95 +1,62 @@
 package org.tepi.listbuilder.client;
 
-import java.util.List;
-
 import org.tepi.listbuilder.ListBuilder;
 
-import com.vaadin.client.DirectionalManagedLayout;
-import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.connectors.AbstractMultiSelectConnector;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.Paintable;
+import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 
-@SuppressWarnings("serial")
 @Connect(ListBuilder.class)
-public class ListBuilderConnector extends AbstractMultiSelectConnector
-		implements DirectionalManagedLayout, OrderedValueChangeListener {
+public class ListBuilderConnector extends AbstractComponentConnector implements Paintable {
 
-	private ListBuilderServerRpc rpc;
+	@SuppressWarnings("deprecation")
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+		// Captions are updated before super call to ensure the widths are set
+		// correctly
+		if (isRealUpdate(uidl)) {
+			getWidget().updateCaptions(uidl);
+		}
 
-	public ListBuilderConnector() {
-		rpc = RpcProxy.create(ListBuilderServerRpc.class, this);
-		getWidget().setOrderedValueChangeListener(this);
-	}
+		// Save details
+		getWidget().client = client;
+		getWidget().id = uidl.getId();
 
-	@Override
-	protected void init() {
-		super.init();
-		getLayoutManager().registerDependency(this, getWidget().getCaptionWrapper().getElement());
-	}
+		if (!isRealUpdate(uidl)) {
+			return;
+		}
 
-	@Override
-	public void onUnregister() {
-		getLayoutManager().unregisterDependency(this, getWidget().getCaptionWrapper().getElement());
+		getWidget().selectedKeys.clear();
+		String[] selected = uidl.getStringArrayVariable("orderedselection");
+		for (int i = 0; i < selected.length; i++) {
+			getWidget().selectedKeys.add(selected[i]);
+		}
+
+		getWidget().readonly = uidl.getBooleanAttribute("readonly");
+		getWidget().disabled = uidl.getBooleanAttribute("disabled");
+
+		if (uidl.hasAttribute("cols")) {
+			getWidget().cols = uidl.getIntAttribute("cols");
+		}
+		if (uidl.hasAttribute("rows")) {
+			getWidget().rows = uidl.getIntAttribute("rows");
+		}
+
+		final UIDL ops = uidl.getChildUIDL(0);
+
+		if (getWidget().getColumns() > 0) {
+			getWidget().container.setWidth(getWidget().getColumns() + "em");
+		}
+
+		getWidget().buildOptions(ops);
+
+		getWidget().setTabIndex(uidl.hasAttribute("tabindex") ? uidl.getIntAttribute("tabindex") : 0);
+		getWidget().fixButtonStates();
 	}
 
 	@Override
 	public VListBuilder getWidget() {
 		return (VListBuilder) super.getWidget();
-	}
-
-	@Override
-	public ListBuilderState getState() {
-		return (ListBuilderState) super.getState();
-	}
-
-	@OnStateChange(value = { "leftColumnCaption", "rightColumnCaption", "caption" })
-	void updateCaptions() {
-		getWidget().updateCaptions(getState().leftColumnCaption, getState().rightColumnCaption);
-
-		getLayoutManager().setNeedsHorizontalLayout(this);
-	}
-
-	@OnStateChange("orderedSelection")
-	void updateSelectionOrder() {
-		getWidget().updateSelectionOrder(getState().orderedSelection);
-	}
-
-	@OnStateChange("readOnly")
-	void updateReadOnly() {
-		getWidget().setReadOnly(isReadOnly());
-	}
-
-	@OnStateChange("tabIndex")
-	void updateTabIndex() {
-		getWidget().setTabIndex(getState().tabIndex);
-	}
-
-	@Override
-	public void layoutVertically() {
-		if (isUndefinedHeight()) {
-			getWidget().clearInternalHeights();
-		} else {
-			getWidget().setInternalHeights();
-		}
-	}
-
-	@Override
-	public void layoutHorizontally() {
-		if (isUndefinedWidth()) {
-			getWidget().clearInternalWidths();
-		} else {
-			getWidget().setInternalWidths();
-		}
-	}
-
-	@Override
-	public MultiSelectWidget getMultiSelectWidget() {
-		return getWidget();
-	}
-
-	@Override
-	public void valueChanged(List<String> value) {
-		rpc.updateValue(value);
 	}
 }
